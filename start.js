@@ -13,7 +13,34 @@ let sleeptime=100 //variable for how long it waits between requests, it changes 
 let id=268952
 const url="https://api.brick-hill.com/v1/shop/"
 
-function sendWebHookMessage(itemjson){
+async function ResendAPIForThumbnail(message,id) {
+	await sleep(10000)
+	let json=await phin(url + id)
+	let itemjson=json.data
+	try {
+		let messageJSON = {
+ 			"content": "@everyone Item Found!!",
+ 			"embeds": [
+   				{
+     					"title": itemjson.name,
+    					"url": "https://www.brick-hill.com/shop/" + itemjson.id,
+					"color": 13632027,
+					"timestamp": itemjson.created_at,
+   					"thumbnail": {
+  						"url": itemjson.thumbnail
+   					}
+  	 			}
+ 			]
+		}
+		if (itemjson.description) embed.embeds[0].description=itemjson.description
+		webhookClient.editMessage(message,messageJSON)
+	} catch(err) {
+		console.warn(err)
+		ResendApiForThumbnail(message,id)
+	}
+}
+
+async function sendWebHookMessage(itemjson){
 	let message = {
  		"content": "@everyone Item Found!!",
  		"embeds": [
@@ -29,10 +56,13 @@ function sendWebHookMessage(itemjson){
  		]
 	}
 	if (itemjson.description) embed.embeds[0].description=itemjson.description
-	webhookClient.send(message).catch((err) => {
-		console.warn(err); 
+	try {
+		let message = await webhookClient.send(message)
+		getThumbnail(message,itemjson.id)
+	} catch(err) {
+		console.warn(err)
 		sendWebHookMessage(itemjson)
-	})
+	}
 }
 
 async function doThing() {
