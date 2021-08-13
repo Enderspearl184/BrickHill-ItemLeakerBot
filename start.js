@@ -59,7 +59,7 @@ function sendWebHookMessage(itemjson){
 	try {
 		webhookClient.send(message).then(function(message) {
 			getThumbnail(message,itemjson.id)
-		}
+		})
 	} catch(err) {
 		console.warn(err)
 		sendWebHookMessage(itemjson)
