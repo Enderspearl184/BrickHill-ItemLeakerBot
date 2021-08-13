@@ -40,7 +40,7 @@ async function ResendAPIForThumbnail(message,id) {
 	}
 }
 
-async function sendWebHookMessage(itemjson){
+function sendWebHookMessage(itemjson){
 	let message = {
  		"content": "@everyone Item Found!!",
  		"embeds": [
@@ -57,8 +57,9 @@ async function sendWebHookMessage(itemjson){
 	}
 	if (itemjson.description) embed.embeds[0].description=itemjson.description
 	try {
-		let message = await webhookClient.send(message)
-		getThumbnail(message,itemjson.id)
+		webhookClient.send(message).then(function(message) {
+			getThumbnail(message,itemjson.id)
+		}
 	} catch(err) {
 		console.warn(err)
 		sendWebHookMessage(itemjson)
