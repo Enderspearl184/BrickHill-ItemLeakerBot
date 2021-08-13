@@ -1,25 +1,28 @@
 const webhookid="869814769086001172"
 const webhooktoken="YAWxkzDoTB268yZMzL2rZhd8bHDvAmo9bA0phofN9jCTHT37UulMLX-eFmIaz-XRXo-y"
 
+//const webhookid="869787940438544444"
+//const webhooktoken="tTTS6gtdV5zRCUE-KAf2COUp3448DB3Cdgbw1bWJ54eoOvbWnSC9h01EqsqP7QdCzO1d"
+
 const sleep = require("sleep-promise")
 const phin = require("phin")
     .defaults({
     timeout: 12000
 });
 const Discord = require("discord.js");
-const webhookClient = new Discord.WebhookClient(webhookid, webhooktoken)
+const webhookClient = new Discord.WebhookClient({id:webhookid, token:webhooktoken})
 
 let sleeptime=100 //variable for how long it waits between requests, it changes depending on whether it found an item or not
-let id=268952
+let id=267982
 const url="https://api.brick-hill.com/v1/shop/"
 
-async function ResendAPIForThumbnail(message,id) {
-	await sleep(10000)
-	let json=await phin(url + id)
-	let itemjson=json.data
+async function getThumbnail(message,id) {
+	await sleep(15000)
+	let data=await phin(url + id)
+	let itemjson=JSON.parse(data.body.toString()).data
 	try {
 		let messageJSON = {
- 			"content": "@everyone Item Found!!",
+ 			"content": "Item Found!!",
  			"embeds": [
    				{
      					"title": itemjson.name,
@@ -33,16 +36,16 @@ async function ResendAPIForThumbnail(message,id) {
  			]
 		}
 		if (itemjson.description) embed.embeds[0].description=itemjson.description
-		webhookClient.editMessage(message,messageJSON)
+		webhookClient.editMessage(message.id,messageJSON)
 	} catch(err) {
 		console.warn(err)
-		ResendApiForThumbnail(message,id)
+		getThumbnail(message,id)
 	}
 }
 
 function sendWebHookMessage(itemjson){
 	let message = {
- 		"content": "@everyone Item Found!!",
+ 		"content": "Item Found!!",
  		"embeds": [
    			{
      				"title": itemjson.name,
