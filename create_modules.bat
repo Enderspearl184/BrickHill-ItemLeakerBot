@@ -1,3 +1,3 @@
-npm i sleep-promise@latest
-npm i phin@latest
-npm i discord.js@latest
+npm install sleep-promise
+npm install phin
+npm install discord.js 
