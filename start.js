@@ -20,7 +20,7 @@ const url="https://api.brick-hill.com/v1/shop/";
 
 function sendWebHookMessage(itemjson, messageEdit){
 	let message = {
- 		"content": "@everyone Item Found!!",
+ 		"content": "@everyone Item Found!! (" + (itemjson.type.type[0].toUpperCase()+itemjson.type.type.substring(1)) + ")" ,
  		"embeds": [
    			{
      				"title": itemjson.name,
@@ -29,7 +29,8 @@ function sendWebHookMessage(itemjson, messageEdit){
     				"timestamp": itemjson.created_at,
    				"thumbnail": {
   					"url": itemjson.thumbnail
-   				}
+   				},
+				"description":"https://api.brick-hill.com/v1/shop/" + itemjson.id
   	 		}
  		]
 	};
