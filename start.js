@@ -7,7 +7,6 @@ const webhooktoken=config[configType].token;
 const fs = require('fs');
 var id=fs.readFileSync('last.txt','utf8');
 console.log(id)
-const sleep = require("sleep-promise");
 const phin = require("phin")
     .defaults({
     timeout: 12000
@@ -17,6 +16,10 @@ const webhookClient = new Discord.WebhookClient({id:webhookid, token:webhooktoke
 
 let sleeptime=100; //variable for how long it waits between requests, it changes depending on whether it found an item or not
 const url="https://api.brick-hill.com/v1/shop/";
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 function sendWebHookMessage(itemjson, messageEdit){
 	let message = {
