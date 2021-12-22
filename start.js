@@ -14,7 +14,7 @@ const phin = require("phin")
 const Discord = require("discord.js");
 const webhookClient = new Discord.WebhookClient({id:webhookid, token:webhooktoken});
 
-let sleeptime=100; //variable for how long it waits between requests, it changes depending on whether it found an item or not
+let sleeptime=1000; //variable for how long it waits between requests, it changes depending on whether it found an item or not
 const url="https://api.brick-hill.com/v1/shop/";
 
 function sleep(ms) {
@@ -33,7 +33,7 @@ function sendWebHookMessage(itemjson, messageEdit){
    				"thumbnail": {
   					"url": itemjson.thumbnail
    				},
-				"description":"https://www.brick-hill.trade/shop/" + itemjson.id
+				"description":"https://api.brick-hill.com/v1/shop/" + itemjson.id
   	 		}
  		]
 	};
@@ -68,15 +68,14 @@ async function doThing() {
 			console.log(id);
 			id++;
 			fs.writeFileSync('last.txt', id.toString());
-			sleeptime=100;
-		} else if (JSONItemData.error && JSONItemData.error.message=="Record not found") {
+			sleeptime=250;
+		} else if (JSONItemData.error) {
 			sleeptime=1000;
 		} else {
-			if (JSONItemData.error) console.log(JSONItemData.error.message + " id: " + id)
+			id++
 			console.log(id);
-			id++;
 			fs.writeFileSync('last.txt', id.toString());
-			sleeptime=100;
+			sleeptime=250;
 		};
 		doThing();
 	} catch (error) {
