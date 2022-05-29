@@ -21,7 +21,8 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function sendWebHookMessage(itemjson, messageEdit){
+function sendWebHookMessage(itemjson, messageEdit, timestamp){
+	if (!timestamp) timestamp = new Date().toLocaleString() + " PST"
 	let message = {
  		"content": "@everyone Item Found!! (" + (itemjson.type.type[0].toUpperCase()+itemjson.type.type.substring(1)) + ")" ,
  		"embeds": [
@@ -29,7 +30,7 @@ function sendWebHookMessage(itemjson, messageEdit){
      				"title": itemjson.name,
     				"url": "https://www.brick-hill.com/shop/" + itemjson.id,
     				"color": 13632027,
-    				"timestamp": itemjson.created_at,
+    				"footer": { text:timestamp },
    				"thumbnail": {
   					"url": itemjson.thumbnail
    				},
@@ -44,7 +45,7 @@ function sendWebHookMessage(itemjson, messageEdit){
 				setTimeout(async()=>{
 					let data=await phin(url + itemjson.id);
 					let jsondata=JSON.parse(data.body.toString()).data;
-					sendWebHookMessage(jsondata,msg, itemjson.id);
+					sendWebHookMessage(jsondata,msg, timestamp);
 				},5000);
 			});
 		} else {
