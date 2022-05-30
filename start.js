@@ -1,4 +1,4 @@
-const configType='debug'; //set to either production or debug
+const configType='production'; //set to either production or debug
 const config=require('./config.json');
 
 const webhookid=config[configType].id;
@@ -45,9 +45,6 @@ function sendWebHookMessage(itemjson, messageEdit, timestamp){
 				setTimeout(async()=>{
 					let data=await phin(url + itemjson.id);
 					let jsondata=JSON.parse(data.body.toString()).data;
-					let thumbnailData = await phin({url:"https://api.brick-hill.com/v1/thumbnails/bulk",method:"POST",data:{"thumbnails": [{"id": itemjson.id,"type": 2}]}})
-					//console.log(thumbnailData.body.toString())
-					jsondata.thumbnail=JSON.parse(thumbnailData.body.toString()).data[0].thumbnail
 					sendWebHookMessage(jsondata,msg, timestamp);
 				},5000);
 			});
@@ -67,13 +64,6 @@ async function doThing() {
 		let JSONItemData = JSON.parse(data.body.toString());
 		if (!JSONItemData.error && JSONItemData.data.creator.id==1003) {
 			if (!JSONItemData.data.is_public) {
-				try { 
-					let thumbnailData = await phin({url:"https://api.brick-hill.com/v1/thumbnails/bulk",method:"POST",data:{"thumbnails": [{"id": id,"type": 2}]}})
-					//console.log(thumbnailData.body.toString())
-					JSONItemData.data.thumbnail=JSON.parse(thumbnailData.body.toString()).data[0].thumbnail
-				} catch(err) {
-					console.error(err)
-				}
 				sendWebHookMessage(JSONItemData.data);
 			};
 			console.log(id);
