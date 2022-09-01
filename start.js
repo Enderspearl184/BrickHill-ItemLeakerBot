@@ -28,13 +28,13 @@ function sendWebHookMessage(itemjson, messageEdit, timestamp){
  		"embeds": [
    			{
      				"title": itemjson.name,
-    				"url": "https://api.brick-hill.com/v1/shop/" + itemjson.id,
+    				"url": "https://www.brick-hill.com/shop/" + itemjson.id,
     				"color": 13632027,
     				"footer": { text:timestamp },
    				"thumbnail": {
   					"url": itemjson.thumbnail
    				},
-				"description":"https://www.bricc-hill.com/shop/" + itemjson.id
+				"description":"https://api.brick-hill.com/v1/shop/" + itemjson.id
   	 		}
  		]
 	};
